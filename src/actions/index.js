@@ -5,7 +5,7 @@ import db from "../../prisma/db";
 
 export async function incrementThumbsUp(post) {
 
-    await new Promise((resolve) => setTimeout(resolve, 3000))
+    await new Promise((resolve) => setTimeout(resolve, 3000)) // Delay para simular comunicação do servidor
 
     await db.post.update({
         where: {
@@ -19,5 +19,23 @@ export async function incrementThumbsUp(post) {
     })
 
     revalidatePath("/")
+    revalidatePath(`/${post.slug}`)
+}
+export async function postComment(post, formData) {
+    const author = await db.user.findFirst({
+        where: {
+            username: 'anabeatriz_dev'
+        }
+    })
+
+    await db.comment.create({
+        data: {
+            text: formData.get('text'),
+            authorId: author.id,
+            postId: post.id
+        }
+    })
+
+    revalidatePath('/')
     revalidatePath(`/${post.slug}`)
 }
