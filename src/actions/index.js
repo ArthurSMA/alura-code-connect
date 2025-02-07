@@ -21,6 +21,7 @@ export async function incrementThumbsUp(post) {
     revalidatePath("/")
     revalidatePath(`/${post.slug}`)
 }
+
 export async function postComment(post, formData) {
     const author = await db.user.findFirst({
         where: {
